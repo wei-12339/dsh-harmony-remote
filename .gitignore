@@ -1,0 +1,21 @@
+# Local build output and private signing material
+build/
+build-temp/
+*.hap
+*.hsp
+*.p12
+*.p7b
+*.cer
+*.keystore
+*.json5
+.env
+.DS_Store
+
+# Local screenshots, logs, and device dumps
+*.log
+*.jpeg
+*.jpg
+*.png
+*.xml
+*.json
+
