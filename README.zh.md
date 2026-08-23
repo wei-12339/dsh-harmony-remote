@@ -119,6 +119,15 @@ proxy http://127.0.0.1:3080
 6. 页面加载后选择原工作区，进入原来的会话。
 7. 发送短消息验证链路；电脑上的 Harness 应该同步出现该消息并执行。
 
+首次用 Edge 打开页面时，插件、连接通道和工作区可能需要约 1 分钟完成
+初始化。期间看到启动画面、空白区域或“正在加载工作区…”属于正常现象；请
+保持页面打开，不要连续刷新或重复点击连接按钮。
+
+如果点击“连接私网”提示“连接出现问题”或 `restart timeout`，先点击一次
+“退出/断开”（如果界面提供），等待 5 秒后再点击“连接私网”。这类情况是
+手机 VPN 后端偶发启动超时，退出后重新连接通常即可恢复，不代表账号、工作区
+或聊天记录损坏。
+
 ## 已知兼容性处理
 
 ### Harmony 浏览器提示 `crypto.randomUUID is not a function`
@@ -132,6 +141,12 @@ proxy http://127.0.0.1:3080
 长会话包含大量逐字 token 事件，手机一次性解析可能超过内存或触发请求中止。
 方案先加载少量最近消息，完整历史仍保存在电脑端；不要清除 Harness 数据。
 
+### Edge 首次进入很慢
+
+Edge 第一次进入 IP 地址或刚重启 Harness 后，需要重新下载插件并建立 WebSocket
+连接，通常等待约 1 分钟是正常现象。等待期间不要切换浏览器、不要关闭 VPN、
+不要反复刷新。如果超过 2 分钟仍没有界面，关闭当前标签页后重新打开一次即可。
+
 ## 日常使用
 
 - 电脑保持开机、唤醒，Harness 和 Tailscale 保持运行。
@@ -140,6 +155,8 @@ proxy http://127.0.0.1:3080
 - 手机锁屏后若 VPN 被系统暂停，重新打开应用并连接即可。
 - 电脑 Tailscale IP 或 Serve 主机名变化时，以 `tailscale status` 和
   `tailscale serve status` 的新输出为准。
+- 如果“连接私网”偶发失败，使用“退出后再次连接”的顺序重试，不要立即卸载
+  应用或清除数据。
 
 ## 安全边界
 
@@ -160,8 +177,9 @@ dsh-harmony-remote/
 │   ├── architecture.md
 │   ├── manual-steps.md
 │   ├── security.md
+│   ├── operations.md
+│   ├── verification.md
 │   └── troubleshooting.md
 └── scripts/
     └── enable-tailscale-harness-https.ps1
 ```
-
