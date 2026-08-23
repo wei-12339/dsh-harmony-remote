@@ -65,6 +65,12 @@ port 3080 to the public internet.
 7. Select the original workspace, open the existing session, and send a short
    test message. A successful reply proves the phone-to-computer path.
 
+The first Edge visit can take about one minute while plugins, the connection
+channel, and the workspace initialize. Keep the page open during this phase.
+If the phone reports a connection problem or `restart timeout`, exit/disconnect
+once, wait five seconds, and connect again. This transient VPN startup failure
+does not mean that sessions or workspace data are lost.
+
 USB can be unplugged after the VPN is connected and the page is reachable.
 The computer must stay powered on, awake, and running Harness and Tailscale.
 
@@ -75,6 +81,8 @@ The computer must stay powered on, awake, and running Harness and Tailscale.
 - [Manual steps and boundaries](docs/manual-steps.md)
 - [Security and privacy](docs/security.md)
 - [Troubleshooting](docs/troubleshooting.md)
+- [Operations runbook](docs/operations.md)
+- [Verification checklist](docs/verification.md)
 
 ## Limitations
 
@@ -90,4 +98,3 @@ The computer must stay powered on, awake, and running Harness and Tailscale.
 
 MIT. The guide describes integration work and does not grant rights to the
 DeepSeek Harness or Tailscale trademarks and software.
-
