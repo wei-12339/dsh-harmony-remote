@@ -1,11 +1,14 @@
-# DeepSeek Harness 鸿蒙手机远程控制
+# DeepSeek Harness 鸿蒙 + 安卓手机远程控制
 
 > [English](README.md)
 
-这是一个针对华为 Mate 80（纯血鸿蒙）的实操说明：手机通过私有
-Tailscale 网络访问 Windows 电脑上已经运行的 DeepSeek Harness。工作区、
-原会话、聊天记录、模型和文件仍保存在电脑上，手机只是远程浏览器和 VPN
-客户端。
+这是一套让 HarmonyOS 或 Android 手机通过私有 Tailscale 网络访问 Windows
+电脑上既有 DeepSeek Harness 的实操方案。工作区、原会话、聊天记录、模型和
+文件仍保存在各自电脑上，手机只是远程浏览器和 VPN 客户端。
+
+Android 直接使用官方 Tailscale 应用，不需要开发工具或 USB。HarmonyOS 使用
+本项目适配的本地签名客户端，首次安装或调试时需要 USB。每位使用者都应建立
+自己的 Tailscale 私网，不能共用仓库作者的账号或电脑。
 
 本仓库是说明和运维文档，不包含 DeepSeek Harness、Tailscale、DevEco Studio
 的重新分发包，也不包含任何 API Key、登录令牌、节点私钥、签名证书、聊天
@@ -13,17 +16,18 @@ Tailscale 网络访问 Windows 电脑上已经运行的 DeepSeek Harness。工�
 
 ## 最终效果
 
-- 手机使用 Wi-Fi 或移动数据均可访问电脑上的 Harness。
+- HarmonyOS 和 Android 手机均可使用 Wi-Fi 或移动数据访问自己的 Harness。
 - 不需要 USB 线保持连接。
 - 不需要手机和电脑处于同一个 Wi-Fi。
 - 原来的 Windows 工作区和会话不迁移、不清空、不重建。
 - 只有同一 Tailscale tailnet 中的设备可以访问。
+- 分享本仓库只会分享方法，不会让别人访问作者的电脑。
 
 ## 工作原理
 
 ```text
-Mate 80 Edge/系统浏览器
-  -> 鸿蒙 Tailscale VPN Extension
+HarmonyOS Edge/系统浏览器 或 Android Edge/Chrome
+  -> 鸿蒙 VPN Extension 或官方 Tailscale Android VPN
   -> 加密 Tailscale 私网
   -> Windows Tailscale Serve（tailnet only）
   -> 127.0.0.1:3080
@@ -43,11 +47,18 @@ Tailscale Serve 只是把电脑本机的 `127.0.0.1:3080` 代理到私网，不�
 - Tailscale Windows 客户端已安装，并登录与你手机相同的账号。
 - 电脑不能关机或休眠；Harness 和 Tailscale 服务必须运行。
 
-### 手机
+### HarmonyOS 手机
 
 - 华为 Mate 80，已安装本项目对应的本地签名应用。
 - 手机 Tailscale 登录与电脑相同的账号。
 - 首次安装、覆盖安装或调试时需要 USB 调试；日常使用不需要 USB。
+
+### Android 手机
+
+- 建议 Android 8 或更高版本。
+- 安装官方 Tailscale 和 Edge/Chrome。
+- 手机与电脑登录使用者自己的同一个 Tailscale 账号。
+- 不需要 DevEco Studio、HAP 或 USB。
 
 ### 构建者额外准备
 
@@ -55,7 +66,13 @@ Tailscale Serve 只是把电脑本机的 `127.0.0.1:3080` 代理到私网，不�
 - HarmonyOS SDK 6.1.0（API 23，含 Native SDK）。
 - 华为开发者账号和本地自动签名配置。
 
-## 第一次部署：哪些必须手动操作
+## 平台入口
+
+- Android：阅读 [安卓独立指南](docs/android-guide.zh.md)。
+- HarmonyOS：继续使用本页下方的 HAP 和 VPN Extension 流程。
+- 两个平台完成后都使用 [安装验收清单](docs/installation-checklist.zh.md)。
+
+## HarmonyOS 第一次部署：哪些必须手动操作
 
 以下动作必须由手机使用者确认，自动脚本不能代替系统授权：
 
@@ -96,13 +113,25 @@ proxy http://127.0.0.1:3080
 
 不要运行 `tailscale funnel`，不要把 `tailnet only` 改成公网模式。
 
-### 3. 检查可信主机
+### 3. 自动检测 Windows 状态
+
+在管理员 PowerShell 中运行只读检测脚本：
+
+```powershell
+powershell.exe -NoProfile -ExecutionPolicy Bypass -File ".\scripts\test-windows-readiness.ps1"
+```
+
+它会检查 Harness 本机端口、HTTP、Tailscale 登录、Serve 目标和公网暴露标记，
+但不会修改配置。`RESULT=NEEDS_ADMIN` 表示终端权限不足；改用管理员 PowerShell
+重试并修复全部 `FAIL`，直到输出 `RESULT=READY`。
+
+### 4. 检查可信主机
 
 如果页面能打开但 API 返回 403，说明 Harness 的 trusted-host 白名单没有
 包含 Serve 的主机名。把当前 Serve 主机名加入 Harness 的 web 配置后，完全
 退出并重新打开 Harness。此项是 DNS-rebinding 防护，不是登录认证。
 
-## 手机端操作
+## HarmonyOS 手机端操作
 
 1. 打开“DeepSeek 私网遥控”。
 2. 登录与电脑相同的 Tailscale 账号。
@@ -157,6 +186,7 @@ Edge 第一次进入 IP 地址或刚重启 Harness 后，需要重新下载插�
   `tailscale serve status` 的新输出为准。
 - 如果“连接私网”偶发失败，使用“退出后再次连接”的顺序重试，不要立即卸载
   应用或清除数据。
+- Android 若锁屏后断开，应允许官方 Tailscale 后台活动并取消严格电池优化。
 
 ## 安全边界
 
@@ -175,11 +205,16 @@ dsh-harmony-remote/
 ├── README.zh.md
 ├── docs/
 │   ├── architecture.md
+│   ├── android-guide.md
+│   ├── android-guide.zh.md
+│   ├── installation-checklist.md
+│   ├── installation-checklist.zh.md
 │   ├── manual-steps.md
 │   ├── security.md
 │   ├── operations.md
 │   ├── verification.md
 │   └── troubleshooting.md
 └── scripts/
-    └── enable-tailscale-harness-https.ps1
+    ├── enable-tailscale-harness-https.ps1
+    └── test-windows-readiness.ps1
 ```

@@ -1,5 +1,14 @@
 # 故障排查
 
+先在 Windows 管理员 PowerShell 运行只读检测：
+
+```powershell
+powershell.exe -NoProfile -ExecutionPolicy Bypass -File ".\scripts\test-windows-readiness.ps1"
+```
+
+优先处理所有 `FAIL`。`RESULT=NEEDS_ADMIN` 表示当前终端无权读取 Tailscale
+服务状态；脚本本身不会修改 Harness 或 Tailscale。
+
 ## 页面无法访问 / NXDOMAIN
 
 电脑执行：
@@ -33,6 +42,18 @@ trusted-host 白名单并完整重启 Harness。
 重新打开 HarmonyOS 应用并点击连接，接受 VPN 授权。检查系统电池管理是否
 限制该应用后台运行。电脑必须在线，移动数据不需要与电脑同一 Wi-Fi。
 
+### Android
+
+- Android 通常同时只能使用一个 VPN，先关闭其他 VPN、代理或加速器。
+- 允许官方 Tailscale 使用移动数据、后台数据和后台活动。
+- 将 Tailscale 从严格电池优化或一键清理中排除。
+- 断开，等待 5 秒，再连接一次，然后确认 Windows 节点可见。
+
+### HarmonyOS
+
+重新打开本地客户端并点击连接，接受 VPN 授权。若应用后台被系统回收，关闭
+不必要的后台应用，并允许客户端后台运行。
+
 ## 点击“连接私网”显示连接出现问题
 
 如果错误包含 `FAILED | VPN backend | restart timeout`，按以下顺序恢复：
@@ -52,6 +73,17 @@ USB、卸载应用或清除应用数据。连续三次仍失败时，再重启�
 摘要，等待约 1 分钟是预期行为。等待期间保持 VPN 连接和页面打开，不要连续刷新。
 超过 2 分钟仍停留在启动画面时，关闭当前标签页，重新打开当前私网地址一次。
 
+## Android HTTPS 名称无法解析
+
+1. 确认 Android 与 Windows 登录同一个由使用者自己拥有的 Tailscale 账号。
+2. 在 Android Tailscale 设备列表中确认 Windows 节点在线。
+3. 暂时关闭私人 DNS、广告拦截器和其他 VPN 后重试。
+4. 断开 Tailscale，等待 5 秒，再连接一次。
+5. 电脑重新运行 `tailscale serve status`，使用当前显示的 HTTPS 地址。
+
+Android 优先使用 HTTPS Serve 主机名。不要因为 DNS 故障直接启用 Funnel 或把
+3080 公开到互联网。
+
 ## USB 相关
 
 USB 仅用于安装和调试。远程使用阶段拔线是正常的；若重新部署 HAP、读取
@@ -66,3 +98,5 @@ HDC 日志或更新签名，才需要重新连接 USB。
 | Edge 启动画面约 1 分钟 | 保持页面等待 | 不要连续刷新 |
 | 历史加载失败 | 等待小历史窗口、刷新一次 | 不要删除 DSH_HOME |
 | 电脑端也打不开 | Harness、Serve、Windows 睡眠状态 | 不要迁移工作区 |
+| Android VPN 无法启动 | 关闭其他 VPN、允许后台与移动数据 | 不要安装来源不明的 APK |
+| Android HTTPS 名称打不开 | 同账号、节点在线、私人 DNS 冲突 | 不要启用 Funnel |

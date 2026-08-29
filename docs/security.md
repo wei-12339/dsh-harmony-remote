@@ -10,6 +10,19 @@
 `trustedHosts` 只解决 Harness 的 Host/DNS-rebinding 检查，不等于用户认证。
 Tailscale 账号、设备登录、ACL、手机锁屏和电脑账户仍是安全边界。
 
+## 每位使用者独立部署
+
+本仓库只分发文档和通用脚本，不提供中心中继账号或共享 Harness。每位使用者
+必须：
+
+- 在自己的 Windows 和手机上登录自己的 Tailscale 账号；
+- 只连接自己的 Harness 和工作区；
+- 不索取或复用作者的认证密钥、登录链接、机器名或私网地址；
+- 团队 tailnet 使用 ACL 限制能够访问 Harness 节点的成员。
+
+Android 使用官方 Tailscale 应用，不需要第三方 APK。HarmonyOS HAP 只能来自
+使用者自己信任的构建者和签名流程。
+
 ## GitHub 发布边界
 
 公开仓库只应包含通用说明、示例配置和不含秘密的脚本。以下内容禁止提交：
@@ -26,3 +39,8 @@ Tailscale 账号、设备登录、ACL、手机锁屏和电脑账户仍是安全�
 二维码或 Tailscale 邀请链接。别人需要建立自己的 Tailscale tailnet 和
 自己的 Harness 实例，不能直接使用你的会话。
 
+## Harness 权限风险
+
+Harness 可能读取工作区文件、调用工具并执行电脑命令。获得网页访问权不能被
+当作普通只读网页权限。电脑应使用最小权限账户，手机应设置锁屏，Tailscale
+账号建议开启两步验证；设备丢失时应立即从 tailnet 管理页面移除该设备。
