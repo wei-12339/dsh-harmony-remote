@@ -1,5 +1,8 @@
 # 安全与隐私
 
+本文适用于当前可用的直连兼容方案。产品化的设备身份、权限、风险等级、审计、
+紧急停止和供应链安全要求见 [V1 安全模型](product/security-model-v1.zh.md)。
+
 ## 网络边界
 
 本方案使用 Tailscale tailnet-only。未启用 Funnel，未配置公网端口转发。URL
@@ -44,3 +47,9 @@ Android 使用官方 Tailscale 应用，不需要第三方 APK。HarmonyOS HAP �
 Harness 可能读取工作区文件、调用工具并执行电脑命令。获得网页访问权不能被
 当作普通只读网页权限。电脑应使用最小权限账户，手机应设置锁屏，Tailscale
 账号建议开启两步验证；设备丢失时应立即从 tailnet 管理页面移除该设备。
+
+## 当前方案与产品方案的差异
+
+当前 `Legacy Bridge Mode` 主要依赖 tailnet 成员关系，不具备独立的产品设备密钥
+和细粒度策略。未来 `Managed Gateway Mode` 会增加本地设备绑定、撤销、审计和
+暂停入口。在安全网关实际发布前，不应把当前直连方式描述为已经具备这些能力。

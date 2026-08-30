@@ -14,6 +14,21 @@ Android 直接使用官方 Tailscale 应用，不需要开发工具或 USB。Har
 的重新分发包，也不包含任何 API Key、登录令牌、节点私钥、签名证书、聊天
 记录或个人电脑路径。
 
+## 产品建设状态
+
+当前版本已经验证双平台远程链路，并完成产品化 **Phase A：架构与安全基线**。
+下一阶段将建设 Windows 一键安装器和本地安全网关。当前可用链路属于
+`Legacy Bridge Mode`；未来产品默认使用 `Managed Gateway Mode`，让手机先通过
+设备认证、权限和审计网关，再访问 Harness。
+
+- [产品建设基线](docs/product/README.zh.md)
+- [V1 产品需求](docs/product/product-requirements-v1.zh.md)
+- [V1 系统架构](docs/product/system-architecture-v1.zh.md)
+- [V1 安全模型](docs/product/security-model-v1.zh.md)
+- [分阶段建设路线](docs/product/roadmap.zh.md)
+
+这些文档确认了开发方向，不表示一键安装器和统一客户端已经完成。
+
 ## 最终效果
 
 - HarmonyOS 和 Android 手机均可使用 Wi-Fi 或移动数据访问自己的 Harness。
@@ -209,6 +224,17 @@ dsh-harmony-remote/
 │   ├── android-guide.zh.md
 │   ├── installation-checklist.md
 │   ├── installation-checklist.zh.md
+│   ├── product/
+│   │   ├── README.md
+│   │   ├── README.zh.md
+│   │   ├── product-requirements-v1.zh.md
+│   │   ├── system-architecture-v1.zh.md
+│   │   ├── security-model-v1.zh.md
+│   │   ├── compatibility-program-v1.zh.md
+│   │   └── roadmap.zh.md
+│   ├── adr/
+│   │   ├── 0001-managed-gateway.md
+│   │   └── 0002-native-clients-shared-protocol.md
 │   ├── manual-steps.md
 │   ├── security.md
 │   ├── operations.md

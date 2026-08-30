@@ -15,6 +15,23 @@ This repository is a documentation and operations guide for the tested setup.
 It is not a redistribution of DeepSeek Harness, Tailscale, Huawei SDKs, or any
 signing material.
 
+## Product build status
+
+The dual-platform transport path is tested, and **Phase A: product architecture
+and security baseline** is now defined. The current working path is classified
+as `Legacy Bridge Mode`. The planned product defaults to `Managed Gateway Mode`,
+where a local Windows gateway provides device authentication, policy, audit,
+diagnostics, and emergency pause before accessing Harness.
+
+- [Product build baseline](docs/product/README.md)
+- [V1 product requirements](docs/product/product-requirements-v1.zh.md)
+- [V1 system architecture](docs/product/system-architecture-v1.zh.md)
+- [V1 security model](docs/product/security-model-v1.zh.md)
+- [Delivery roadmap](docs/product/roadmap.zh.md)
+
+These specifications define the build direction. They do not claim that the
+one-click installer, gateway, or native clients are already complete.
+
 ## What it provides
 
 - HarmonyOS and Android connectivity over Wi-Fi or mobile data.
@@ -103,6 +120,8 @@ powershell.exe -NoProfile -ExecutionPolicy Bypass -File .\scripts\test-windows-r
 - [安卓独立指南](docs/android-guide.zh.md)
 - [Installation acceptance checklist](docs/installation-checklist.md)
 - [安装验收清单](docs/installation-checklist.zh.md)
+- [Product build baseline](docs/product/README.md)
+- [产品建设基线](docs/product/README.zh.md)
 - [Architecture and data flow](docs/architecture.md)
 - [Manual steps and boundaries](docs/manual-steps.md)
 - [Security and privacy](docs/security.md)
